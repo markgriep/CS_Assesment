@@ -6,7 +6,22 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Source Folder");
+            var src = Console.ReadLine();
+
+            Console.WriteLine("CSV Destination  Folder");
+            var dst = Console.ReadLine();
+
+
+            Console.WriteLine("Recursive T or F");
+            var recurse = Console.ReadLine();
+
+
+            Console.WriteLine($"S:{src} D:{dst} R:{recurse}");
+
+
+
+
         }
     }
 }
