@@ -1,4 +1,7 @@
+using CsvHelper;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Xunit;
 
@@ -42,6 +45,26 @@ namespace TestProject1
 
             Assert.True(y);
         }
+
+
+
+
+        [Fact]
+        public void TestWritingCSV()
+        {
+        
+            var records = new List<object>();  
+            records.Add(new { FullPath = @"c:\something\", FileType = "PDF", MD5 = "poqwighwelerkg" });
+            records.Add(new { FullPath = @"c:\something\", FileType = "PDF", MD5 = "poqwighwelerkg" });
+            records.Add(new { FullPath = @"c:\something\", FileType = "PDF", MD5 = "poqwighwelerkg" });
+            records.Add(new { FullPath = @"c:\something\", FileType = "PDF", MD5 = "poqwighwelerkg" });
+
+            using (var writer = new StreamWriter(@"c:\temp\file.csv"))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(records);
+            }
+                }
 
     }
 }

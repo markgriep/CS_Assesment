@@ -1,6 +1,11 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ConsoleApp1
 {
@@ -8,6 +13,8 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            var records = new List<object>();
+
 
             Console.WriteLine("Enter the folder to search");             
             var src = Console.ReadLine();                               // no error checking at this point
@@ -20,78 +27,45 @@ namespace ConsoleApp1
             var recurse = Console.ReadLine();
 
 
-            src = @"c:\temp";
-            recurse = "True";
-
             var RecurseYN = GetRecursiveOptions(Convert.ToBoolean(recurse));
-
 
             var x = new DirectoryInfo(src).GetFiles("*.*", RecurseYN);              // turn into a list of files
 
-
             foreach (var item in x)                                                 // loop through list
             {
-                //Console.WriteLine(item.FullName);
-                if (item.Length > 10)
+                if (item.Length > 10)                                               // Choose file length of at least 10
                 {
-
-               
-                   
-
                     var fs = new FileStream(item.FullName, FileMode.Open);
-
                     var ba = new byte[4];
-
                     fs.Read(ba, 0, 4);
-
+                    fs.Close();
 
                     if (IsPdf(ba))
                     {
-                        Console.WriteLine($"IS PDF: {item.FullName}");
+                        records.Add(new { FullPath = item.FullName, FileType = "PDF", MD5 = CreateMD5Hash(item.FullName) });
+                        }
+
+
+                    if (IsJpg(ba))
+                        {
+                            records.Add(new { FullPath = item.FullName, FileType = "JPG", MD5= CreateMD5Hash(item.FullName) });
+                        }
+
+                        Console.WriteLine("Done...");
                     }
-
-
-                       if (IsJpg(ba))
-                    {
-                        Console.WriteLine($"IS JPEG: {item.FullName}");
-                    }
-
-
-
-
-
-                    //foreach (var vv in ba.ToList())
-                    //{
-                    //    Console.WriteLine(vv.ToString());
-                    //}
-
-
-
-
-
-                    //for (int i = 0; i < 4; i++)
-                    //{
-                    //    int a = Convert.ToInt32(hx.GetValue(i));
-
-                    //    Console.WriteLine(a);
-
-                    //}
-
-
-
-
-
-
-                    Console.WriteLine("-================");
                 }
+
+
+
+            using (var writer = new StreamWriter(@"c:\temp\file.csv"))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(records);
             }
 
 
 
-
-
-
-
+            
         }
 
 
@@ -145,18 +119,21 @@ namespace ConsoleApp1
 
 
 
-
-
-        // Loop through each dir (maybe recursive)
-
-
-        // IS PDF
-
-        // IS JPG
-
-        // Get MD5 hash of file
-
-        // Write PDF
+        public static string CreateMD5Hash(string FileName)
+        {
+            
+            StringBuilder sb = new StringBuilder();                                             // instantiate stringbuilder to hold hash stuff
+            MD5 md5 = System.Security.Cryptography.MD5.Create();                                // instantiate obj
+            var fileContents = File.ReadAllText(FileName);                                      // get text
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(fileContents);              // get/encode in byte array
+            byte[] hashBytes = md5.ComputeHash(inputBytes);                                     // do the hash thingy
+            
+            for (int i = 0; i < hashBytes.Length; i++)                                          // loop through the byte array
+            {
+                sb.Append(hashBytes[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
 
 
 

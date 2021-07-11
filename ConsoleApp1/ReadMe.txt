@@ -1,5 +1,9 @@
 ﻿
 
+This is an MVP of the request.  Version 1.0 without much error checking
+
+
+
 1. Takes two inputs and a flag
   a. A directory that contains the files to be analyzed
   b. A path for the output file (including file name and extension)
@@ -17,9 +21,8 @@
   c. The MD5 hash of the file contents
  
 
- DI search pattern
- https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo.getfiles?view=net-5.0
 
+ NOTES:
 
 
  HEX
