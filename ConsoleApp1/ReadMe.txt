@@ -23,6 +23,7 @@ This is an MVP of the request.  Version 1.0 without much error checking
 
 
  NOTES:
+This is a bare bones MVP. No error checking for inputs
 
 
  HEX

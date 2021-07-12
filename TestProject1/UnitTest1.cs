@@ -64,7 +64,36 @@ namespace TestProject1
             {
                 csv.WriteRecords(records);
             }
-                }
+        }
+
+
+
+
+        [Fact]
+        public void TestMD5_of_a_Pdf_File()
+        {
+            var x = ConsoleApp1.Program.CreateMD5Hash(@"c:\temp\suite.pdf");
+            Assert.Equal("ae68604ab0cde6ae314afb65fe42f796", x.ToLower());
+
+        }
+
+
+
+        // Use this command to get the MD5 from a file
+        //CertUtil -hashfile c:\temp\foxhound.jpg MD5
+        
+        [Fact]
+        public void TestMD5_of_a_jpeg_File()
+        {
+            var x = ConsoleApp1.Program.CreateMD5Hash(@"c:\temp\foxhound.jpg");
+            Assert.Equal("5f6ecc2ca1e4846cee63c6a7de7abb9c", x.ToLower());
+
+        }
+
+
+
+
+
 
     }
 }
